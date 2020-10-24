@@ -36,14 +36,14 @@
             </el-col>
             <!-- “获取验证码”按钮 -->
             <el-col :span="9">
-              <el-button type="success" class="block">获取验证码</el-button>
+              <el-button type="success" class="block" @click="getSms()">获取验证码</el-button>
             </el-col>
           </el-row>
 
         </el-form-item>
 
         <el-form-item>
-          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block">提交</el-button>
+          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block" :disable="loginButonStatus">{{model === 'login' ? "登录" :  "注册"}}</el-button>
         </el-form-item>
 
       </el-form>
@@ -52,7 +52,10 @@
 </template>
 
 <script>
-import{stripscript, emailRegTest, passwordRegTest, codeRegTest} from'@/utils/validate.js'
+import {GetSms} from '@/api/login.js';
+import service from '@/utils/request.js';
+import{stripscript, emailRegTest, passwordRegTest, codeRegTest} from'@/utils/validate.js';
+
 export default {
   //name => 当前模块名称
   name: "Login",
@@ -124,13 +127,14 @@ export default {
     };
 
     return {
-      //登录、注册切换所需数据
-      menuTab: [
+       //登录、注册切换所需数据
+     menuTab: [
         { txt: "登录", current: true, type: 'login' },
         { txt: "注册", current: false, type: 'register' },
       ],
       isActive: true,
       model: 'login',
+      loginButonStatus: true,
       //element return 数据
       ruleForm: {
         username: "",
@@ -153,17 +157,7 @@ export default {
   mounted() {},
   //method
   methods: {
-    //element 表单提交
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("提交成功");
-        } else {
-          console.log("提交失败");
-          return false;
-        }
-      });
-    },
+
     //登录与注册选项切换，绑定鼠标click
     toggleMenu(data) {
       this.menuTab.forEach((element) => {
@@ -175,6 +169,43 @@ export default {
       //切换时，清空表单里已经输入的值
       this.$refs["ruleForm" ].resetFields();
     },
+
+    //element 表单提交
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("提交成功");
+        } else {
+          console.log("提交失败");
+          return false;
+        }
+      });
+    },
+
+    //获取验证码
+    getSms(){
+      //进行提示
+      if(this.ruleForm.username == ''){
+        this.$message.error("邮箱不能为空");
+        return false;
+      }
+
+      if(validateUsername(this.ruleForm.username)){
+        this.$message.error("邮箱格式不正确");
+      }
+
+      //请求接口
+      let data = {
+        username: this.ruleForm.username,
+        module: 'login'
+      }
+      GetSms(data).then((response)=>{
+        console.log(response);
+      }).catch(error=>{
+        console.log(error);
+      });
+    }
+  
   },
   //props, watch => 子组件接收父组件参数
   props: {},
