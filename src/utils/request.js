@@ -7,7 +7,9 @@ const service = axios.create({
     timeout: 15000,
 });
 
-//请求拦截器
+/**
+ * 请求拦截器
+ */
 service.interceptors.request.use(
     function (config) {
         return config;
@@ -17,16 +19,19 @@ service.interceptors.request.use(
     }
 );
 
-//响应拦截器
+/**
+ * 响应拦截器
+ */
 service.interceptors.response.use(
     function (config) {
         let data = response.data;
-        if (data != 0) {
+        if (data !== 0) {
             Message.error(response.message);
             return Promise.reject(data);
         }
         else {
             return response;
+            // return to Promise.resolve(data);
         }
         
     },

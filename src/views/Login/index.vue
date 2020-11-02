@@ -31,19 +31,19 @@
           <el-row :gutter="10">
             <!-- 验证码输入框 -->
             <el-col :span="15">
-              <el-input v-model.number="ruleForm.code" class="item-form" minlength="6" maxlength="6">
+              <el-input v-model="ruleForm.code" class="item-form" minlength="6" maxlength="6">
               </el-input>
             </el-col>
             <!-- “获取验证码”按钮 -->
             <el-col :span="9">
-              <el-button type="success" class="block" @click="getSms()">获取验证码</el-button>
+              <el-button type="success" class="block" @click="getSms()" :disabled="codeButton.status">{{codeButton.txt}}</el-button>
             </el-col>
           </el-row>
 
         </el-form-item>
 
         <el-form-item>
-          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block" :disable="loginButonStatus">{{model === 'login' ? "登录" :  "注册"}}</el-button>
+          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block" :disabled="loginButonStatus">{{model === 'login' ? "登录" :  "注册"}}</el-button>
         </el-form-item>
 
       </el-form>
@@ -52,7 +52,9 @@
 </template>
 
 <script>
-import {GetSms} from '@/api/login.js';
+
+import sha1 from 'js-sha1';
+import {GetSms, Register, Login} from '@/api/login.js';
 import service from '@/utils/request.js';
 import{stripscript, emailRegTest, passwordRegTest, codeRegTest} from'@/utils/validate.js';
 
@@ -134,7 +136,15 @@ export default {
       ],
       isActive: true,
       model: 'login',
+      //登录、注册按钮禁用
       loginButonStatus: true,
+      //获取验证码按钮禁用
+      codeButton:{
+        status: false,
+        txt: "获取验证码"
+      },
+      //倒计时
+      timer: null,
       //element return 数据
       ruleForm: {
         username: "",
@@ -158,52 +168,159 @@ export default {
   //method
   methods: {
 
-    //登录与注册选项切换，绑定鼠标click
+    /**
+     * 登录与注册选项高光切换，绑定鼠标click
+     */
     toggleMenu(data) {
+      //先把所有的current改为false
       this.menuTab.forEach((element) => {
         element.current = false;
       });
+      //鼠标点击了这个menuTab，所以要吧current改为true，才会变成选定状态的css
       data.current = true;
-      //修改model的值，切换“重复密码”是否显示
+      //修改model的值，切换menuTab时，“重复密码”是否显示
       this.model= data.type;
       //切换时，清空表单里已经输入的值
       this.$refs["ruleForm" ].resetFields();
+      //切换时，把data里的数据也重置一下
+      ruleForm.username = '';
+      ruleForm.password = '';
+      ruleForm.repeatedPassword = '';
+      ruleForm.code = '';
     },
 
-    //element 表单提交
+    /**
+     * element 表单提交
+     */
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("提交成功");
+          if(this.model === 'login'){
+            //登录接口封装
+            this.login();
+          }
+          else{
+            //注册接口封装
+            this.register();
+          }
         } else {
-          console.log("提交失败");
+          alert("提交失败");
           return false;
         }
       });
     },
 
-    //获取验证码
+    /**
+     * 登录
+     */
+    login(){
+      let repuestData = {//username, password, code都是用户手动输入的
+          username: ruleForm.username,
+          password: sha1(this.ruleForm.password),
+          code: ruleForm.code
+      }
+      //登录接口
+      Login(data).then(response => {
+        console.log('response');
+        this.$router.push({
+          name: 'Console'
+        });
+      }).catch(error => {
+         console.log('登录接口出错');
+      });
+    },
+
+    /**
+     * 注册
+     */
+    register(){
+      let data = {//username, password, code都是用户手动输入的
+        username: this.ruleForm.username,
+        password: sha1(this.ruleForm.password),
+        code: this.ruleForm.code,
+        model: 'register'
+      }
+      //注册接口
+      Register(data).then(response => {
+        let responseData = response.data;
+        this.$message.success("注册成功");
+      }).catch(error => {
+        //注册失败
+      });
+    },
+
+    /**
+     * 获取验证码
+     * username: xxx@xx.com
+     * module: register / login 表示的是按钮上面的文字
+     */
     getSms(){
-      //进行提示
+      //检测邮箱是否为空
       if(this.ruleForm.username == ''){
         this.$message.error("邮箱不能为空");
         return false;
       }
-
-      if(validateUsername(this.ruleForm.username)){
+      //验证邮箱格式
+      if(!emailRegTest(this.ruleForm.username)){
         this.$message.error("邮箱格式不正确");
       }
-
-      //请求接口
-      let data = {
+      //设置请求参数
+      let requestData = {
         username: this.ruleForm.username,
-        module: 'login'
+        model: this.model
+      };
+      //修改获取验证码按钮状态
+      this.codeButton.status = true;//true，这个按钮不能用
+      this.codeButton.txt = '发送中';
+      //get请求，向后台请求验证码
+       GetSms(requestData).then((response)=>{
+          let responseData = response.data;
+          this.$message({
+            message: responseData.message,//打印出这个message，说明验证码发送成功了
+            type: 'success'
+          });
+          //发送了验证码之后，登陆/注册按钮就能用了
+          loginButonStatus = false;
+          //倒计时60秒
+          this.countDown(60);
+          //倒计时完成，把获取验证码的按钮改变状态
+          this.codeButton.status = false;
+          this.codeButton.txt = '获取验证码';
+        }).catch(error=>{
+          console.log(error);
+        }); 
+    },
+
+    /**
+     * 倒计时
+     * setInterval()函数将返回一个标识符 ID，这个 ID 是唯一的(一般是整数，从 1 开始，每调用一次 setInterval() 就加 1)。
+     * 如果需要 setInterval() 执行的函数或代码尚未执行，我们可以通过 clearInterval() 函数来取消该执行操作，
+     * clearInterval() 需要接收一个参数，这个参数就是 setInterval() 返回的标识符ID。
+     */
+    countDown(num){
+      //在开启定时器之前，判断是否已经存在了一个定时器，如果有，就清除掉这个多余的定时器
+      if(this.timer){
+        clearInterval(this.timer);
       }
-      GetSms(data).then((response)=>{
-        console.log(response);
-      }).catch(error=>{
-        console.log(error);
-      });
+      let timeNum = num;
+      this.timer = setInterval(()=>{
+        timeNum--;
+        if(timeNum === 0){//倒计时完成了，清除掉这个定时器
+          clearInterval(this.timer);
+        }
+        else{//倒计时还没完成，继续倒计时
+          codeButton.txt = '倒计时${timeNum}秒'
+        }
+      }, 1000)
+    },
+
+    /**
+     * 清楚倒计时
+     */
+    clearCountDown(){
+      codeButton.status = false;
+      codeButton.txt = '获取验证码';
+      clearInterval(this.timer);
     }
   
   },
@@ -264,3 +381,7 @@ export default {
   margin-top: 19px;
 }
 </style>
+
+
+
+
