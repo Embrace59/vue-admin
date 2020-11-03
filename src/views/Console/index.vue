@@ -12,7 +12,9 @@ export default {
     components: {},
     //data
     data() {
+        return{
 
+        };
     },
      //创建完成时（生命周期）
     created() {},

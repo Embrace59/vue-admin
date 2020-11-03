@@ -1,8 +1,8 @@
 <template>
     <div id="layout">
-        <LayoutHeader />
-        <LayoutMain />
-        <LayoutNav />
+        <LayoutHeader></LayoutHeader>
+        <LayoutMain></LayoutMain>
+        <LayoutNav></LayoutNav>
     </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
     components: { LayoutHeader, LayoutMain, LayoutNav },
     //data
     data() {
-
+        return{};
     },
      //创建完成时（生命周期）
     created() {},
@@ -36,5 +36,4 @@ export default {
 </script>
 
 <style  lang="scss" scoped>
-
 </style>

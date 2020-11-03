@@ -23,9 +23,9 @@ service.interceptors.request.use(
  * 响应拦截器
  */
 service.interceptors.response.use(
-    function (config) {
+    function (response) {
         let data = response.data;
-        if (data !== 0) {
+        if (data.resCode !== 0) {
             Message.error(response.message);
             return Promise.reject(data);
         }
