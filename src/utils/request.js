@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
 
 const service = axios.create({
@@ -25,7 +25,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     function (response) {
         let data = response.data;
-        if (data.resCode !== 0) {
+        if (data.resCode !== 0) {//返回的data的rescode不是0，就error了
             Message.error(response.message);
             return Promise.reject(data);
         }
@@ -33,7 +33,7 @@ service.interceptors.response.use(
             return response;
             // return to Promise.resolve(data);
         }
-        
+
     },
     function (error) {
         return Promise.reject(error);

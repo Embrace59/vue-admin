@@ -1,5 +1,5 @@
 <template>
-    <div id="layout">
+    <div id="layout" :class="[menuStatus ? 'close' : 'open']">
         <LayoutHeader></LayoutHeader>
         <LayoutMain></LayoutMain>
         <LayoutNav></LayoutNav>
@@ -13,22 +13,25 @@ import LayoutMain from './Components/Main'
 import LayoutNav from './Components/Nav'
 
 export default {
-    //name => 当前模块名称
     name: 'layout',
-    //组件，有引入组件时，放置组件名称
+    
     components: { LayoutHeader, LayoutMain, LayoutNav },
-    //data
+    
     data() {
-        return{};
+        return{
+        };
     },
-     //创建完成时（生命周期）
-    created() {},
-    //挂载完成时（生命周期）
-    mounted() {},
-    //method
-    methods:{
 
+    computed:{
+        menuStatus(){
+            return this.$store.state.app.isCollapse;
+        }
     },
+    
+    created() {},
+    mounted() {},
+
+    methods:{},
     //props, watch => 子组件接收父组件参数
     props: {},
     watch: {},

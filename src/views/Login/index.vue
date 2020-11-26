@@ -43,7 +43,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block" :disabled="loginButonStatus">{{model === 'login' ? "登录" :  "注册"}}</el-button>
+          <el-button type="danger" @click="submitForm('ruleForm')" class="login-btn block" :disabled="loginButtonStatus">{{model === 'login' ? "登录" :  "注册"}}</el-button>
         </el-form-item>
 
       </el-form>
@@ -137,7 +137,7 @@ export default {
       isActive: true,
       model: 'login',
       //登录、注册按钮禁用
-      loginButonStatus: true,
+      loginButtonStatus: true,
       //获取验证码按钮禁用
       codeButton:{
         status: false,
@@ -165,9 +165,8 @@ export default {
   created() {},
   //挂载完成时（生命周期）
   mounted() {},
-  //method
+  
   methods: {
-
     /**
      * 登录与注册选项高光切换，绑定鼠标click
      */
@@ -183,12 +182,11 @@ export default {
       //切换时，清空表单里已经输入的值
       this.$refs["ruleForm" ].resetFields();
       //切换时，把data里的数据也重置一下
-      ruleForm.username = '';
-      ruleForm.password = '';
-      ruleForm.repeatedPassword = '';
-      ruleForm.code = '';
+      this.ruleForm.username = '';
+      this.ruleForm.password = '';
+      this.ruleForm.repeatedPassword = '';
+      this.ruleForm.code = '';
     },
-
     /**
      * element 表单提交
      */
@@ -209,46 +207,45 @@ export default {
         }
       });
     },
-
     /**
      * 登录
      */
     login(){
-      let repuestData = {//username, password, code都是用户手动输入的
-          username: ruleForm.username,
+      let requestData = {//username, password, code都是用户手动输入的
+          username: this.ruleForm.username,
           password: sha1(this.ruleForm.password),
-          code: ruleForm.code
+          code: this.ruleForm.code
       }
-      //登录接口
-      Login(data).then(response => {
-        console.log('response');
+      this.$store.dispatch('login', requestData).then(response => {
+        console.log('登陆成功');
+        console.log(response);
+        //页面跳转
         this.$router.push({
           name: 'Console'
         });
       }).catch(error => {
          console.log('登录接口出错');
-      });
+      });;
     },
-
     /**
      * 注册
      */
     register(){
-      let data = {//username, password, code都是用户手动输入的
+      let requestData = {//username, password, code都是用户手动输入的，model是固定的register
         username: this.ruleForm.username,
         password: sha1(this.ruleForm.password),
         code: this.ruleForm.code,
         model: 'register'
       }
       //注册接口
-      Register(data).then(response => {
+      Register(requestData).then(response => {
         let responseData = response.data;
+        console.log("成功>>>>>>>>>>>>>>>")
         this.$message.success("注册成功");
       }).catch(error => {
         //注册失败
       });
     },
-
     /**
      * 获取验证码
      * username: xxx@xx.com
@@ -280,17 +277,21 @@ export default {
             type: 'success'
           });
           //发送了验证码之后，登陆/注册按钮就能用了
-          loginButonStatus = false;
+          this.loginButtonStatus = false;
           //倒计时60秒
           this.countDown(60);
           //倒计时完成，把获取验证码的按钮改变状态
           this.codeButton.status = false;
           this.codeButton.txt = '获取验证码';
         }).catch(error=>{
-          console.log(error);
+            //发生错误，启用登录或注册按钮
+            this.loginButtonStatus = false;
+             //修改获取验证码按钮状态
+            this.codeButton.status = false;//true，这个按钮不能用
+            this.codeButton.txt = '再次获取';
+            console.log(error);
         }); 
     },
-
     /**
      * 倒计时
      * setInterval()函数将返回一个标识符 ID，这个 ID 是唯一的(一般是整数，从 1 开始，每调用一次 setInterval() 就加 1)。
@@ -309,22 +310,21 @@ export default {
           clearInterval(this.timer);
         }
         else{//倒计时还没完成，继续倒计时
-          codeButton.txt = '倒计时${timeNum}秒'
+          this.codeButton.txt = '倒计时${timeNum}秒'
         }
       }, 1000)
     },
-
     /**
      * 清楚倒计时
      */
     clearCountDown(){
-      codeButton.status = false;
-      codeButton.txt = '获取验证码';
+      this.codeButton.status = false;
+      this.codeButton.txt = '获取验证码';
       clearInterval(this.timer);
     }
   
   },
-  //props, watch => 子组件接收父组件参数
+ 
   props: {},
   watch: {},
 };
@@ -338,14 +338,16 @@ export default {
 }
 
 #login {
+  position: relative;
   height: 100vh;
-  background-color: rgb(192, 55, 158);
+  background-color: rgb(52 , 74, 95);
 }
 
 .login-wrap {
+  position: absolute;
+  left: 530px;
+  top: 80px;
   width: 330px;
-  margin: auto;
-  background-color: grey;
 }
 
 .menu-tab {

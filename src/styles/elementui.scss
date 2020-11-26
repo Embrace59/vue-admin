@@ -5,3 +5,12 @@
     background-color: $mainColor !important;
   }
 }
+
+.el-menu--vertical {
+  .el-menu-item {
+    background-color: #344a5f !important;
+    &.is-active {
+      background-color: $mainColor !important;
+    }
+  }
+}

@@ -6,7 +6,7 @@ import service from "@/utils/request.js"
  * export一个post请求
  * @param {*} data 
  */
-export function GetSms(data){
+export function GetSms(data) {
     return service.request({
         method: "post",
         url: "/getSms/",
@@ -18,7 +18,7 @@ export function GetSms(data){
  * 注册
  */
 export function Register(data) {
-     return service.request({
+    return service.request({
         method: "post",
         url: "/register",
         data: data
@@ -28,10 +28,10 @@ export function Register(data) {
 /**
  * 登录
  */
-export function Login(data){
+export function Login(data) {
     return service.request({
         method: "post",
         url: "/login/",
-        data
+        data: data
     })
 }
