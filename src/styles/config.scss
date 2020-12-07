@@ -1,0 +1,15 @@
+//导航栏展开的菜单宽度
+$navMenu: 200px;
+//导航栏收缩的菜单宽度
+$navMenuMin: 64px;
+$layoutHeader: 10px;
+//主颜色
+$mainColor: #f56c6c;
+
+@mixin webkit($type, $value) {
+  -webkit-#{$type}: $value;
+  -moz-#{$type}: $value;
+  -o-#{$type}: $value;
+  -ms-#{$type}: $value;
+  #{$type}: $value;
+}
