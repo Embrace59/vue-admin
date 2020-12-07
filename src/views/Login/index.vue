@@ -216,7 +216,7 @@ export default {
           password: sha1(this.ruleForm.password),
           code: this.ruleForm.code
       }
-      this.$store.dispatch('login', requestData).then(response => {
+      this.$store.dispatch('app/login', requestData).then(response => {
         console.log('登陆成功');
         console.log(response);
         //页面跳转

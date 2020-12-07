@@ -2,27 +2,22 @@
     <div id="main-wrap">
         <div class="main-content">
             <div>{{aaa}}</div>
-            <div>{{bbb}}</div>
-            <div>{{ccc}}</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    //name => 当前模块名称
-    name: "Main",
+    name: "LayoutMain",
     //组件，有引入组件时，放置组件名称
     components: {},
     //data
     data() {
-        ccc: 123
         return{
             aaa: this.$store.state.login.aaa,
-            bbb: 123
         };
     },
-     //创建完成时（生命周期）
+    //创建完成时（生命周期）
     created() {},
     //挂载完成时（生命周期）
     mounted() {},
@@ -76,19 +71,6 @@ export default {
     padding-right: 15px;
     @include webkit(box-sizing, border-box);
     background-color: #fff;
-}
-
-h1 {
-  margin: 0;
-  background: #cff;
-}
-#div1{
-	margin: 40px 0 25px 0;
-  	background: #999;
-}
-#div2{
-	margin: 20px 0 10px 0;
-	background: #cff;
 }
 
 </style>

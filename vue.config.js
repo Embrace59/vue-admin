@@ -13,30 +13,30 @@ module.exports = {
         const svgRule = config.module.rule("svg");
         // 清除已有的所有 loader。
         // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
-        svgRule.uses.clear();     
+        svgRule.uses.clear();
         svgRule
             .test(/\.svg$/)
             .use("svg-sprite-loader")
             .loader("svg-sprite-loader")
-            .options({ 
+            .options({
                 symbolId: "icon-[name]",
-                include: ["./src/icons"] 
-        });
+                include: ["./src/icons"]
+            });
     },
     configureWebpack: (config) => {
         // 配置解析别名
-        config.resolve = { 
-          extensions: ['.js', '.json', '.vue'],//自动添加文件名后缀
+        config.resolve = {
+            extensions: ['.js', '.json', '.vue'],//自动添加文件名后缀
             alias: {
-            
-            '@': path.resolve(__dirname, './src'),
-            'public': path.resolve(__dirname, './public'),
-            'components': path.resolve(__dirname, './src/components'),
-            'common': path.resolve(__dirname, './src/common'),
-            'api': path.resolve(__dirname, './src/api'),
-            'views': path.resolve(__dirname, './src/views'),
-            'data': path.resolve(__dirname, './src/data')
-          }
+
+                '@': path.resolve(__dirname, './src'),
+                'public': path.resolve(__dirname, './public'),
+                'components': path.resolve(__dirname, './src/components'),
+                'common': path.resolve(__dirname, './src/common'),
+                'api': path.resolve(__dirname, './src/api'),
+                'views': path.resolve(__dirname, './src/views'),
+                'data': path.resolve(__dirname, './src/data')
+            }
         }
     },
     // 生产环境是否生成 sourceMap 文件
@@ -50,7 +50,7 @@ module.exports = {
         // css预设器配置项
         loaderOptions: {
             // 如发现 css.modules 报错，请查看这里：http://www.web-jshtml.cn/#/detailed?id=12
-            scss:  {
+            scss: {
                 prependData: `@import "./src/styles/main.scss";`
             }
         },
@@ -74,7 +74,7 @@ module.exports = {
         hotOnly: false,
         proxy: {
             '/devApi': {
-                target: 'http://www.web-jshtml.cn/vue_admin_api/',
+                target: 'http://www.web-jshtml.cn/vue_admin_api/token',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/devApi': ''
@@ -85,7 +85,7 @@ module.exports = {
             warnings: true,
             errors: true
         },
-        before: app => {}
+        before: app => { }
     },
     /**
      * 第三方插件配置

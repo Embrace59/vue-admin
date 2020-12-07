@@ -10,7 +10,7 @@ export default new VueRouter({
         {
             path: "/",
             redirect: "login",
-            hidden:true,
+            hidden: true,
             meta: {
                 name: "主页"
             }
@@ -18,12 +18,13 @@ export default new VueRouter({
         {
             path: "/login",
             name: "Login",
-            hidden:true,
+            hidden: true,
             meta: {
                 name: "登录"
             },
-            component : () => import("../views/Login/index.vue")
+            component: () => import("../views/Login/index.vue")
         },
+
         //后台页
         {
             path: "/console",

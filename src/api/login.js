@@ -35,3 +35,11 @@ export function Login(data) {
         data: data
     })
 }
+
+export function Logout(data = {}) {
+    return service.request({
+        method: "post",
+        url: "/logout/",
+        data: data
+    })
+}

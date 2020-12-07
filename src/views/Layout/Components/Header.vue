@@ -5,9 +5,11 @@
         </div>
         <div class="pull-right">
             <div class="user-info pull-left">
-                管理员
+                {{username}}
             </div>
-            <div class="header-icon pull-left"><svg-icon iconClass="exit" className="exit"/></div>
+            <div class="header-icon pull-left" @click="logout">
+                <svg-icon iconClass="exit" className="exit"/>
+            </div>
         </div>
     </div>
    
@@ -16,7 +18,7 @@
 <script>
 export default {
     //name => 当前模块名称
-    name: "header",
+    name: "LayoutHeader",
     //组件，有引入组件时，放置组件名称
     components: {},
     //data
@@ -27,10 +29,35 @@ export default {
     created() {},
     //挂载完成时（生命周期）
     mounted() {},
-    //method
+    
+    computed:{
+        username(){
+            return this.$store.state.app.username;
+        }
+    },
+    
     methods:{
+        //每点击一次“折叠左侧菜单栏图标”，改变一次vuex的isCollapse
         navMenuState() {
-            this.$store.commit('SET_COLLAPSE');
+            this.$store.commit('app/SET_COLLAPSE');
+        },
+        //Logout
+        logout(){
+            this.$store.dispatch("app/logout").then(response => {
+                console.log(response.resCode)
+                this.$message({
+                    message: "退出成功！",
+                    type: "success"
+                });
+                //Route back to login view
+                this.$router.push({
+                    name: 'Login'
+                });
+            }).catch(err=>{
+                console.log("aaa")
+                console.log(response.resCode)
+                reject();
+            })
         }
     },
     //props, watch => 子组件接收父组件参数

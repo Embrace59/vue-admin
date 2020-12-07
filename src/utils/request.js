@@ -24,10 +24,10 @@ service.interceptors.request.use(
  */
 service.interceptors.response.use(
     function (response) {
-        let data = response.data;
-        if (data.resCode !== 0) {//返回的data的rescode不是0，就error了
+        let responseData = response.data;////response.data是后台返回的
+        if (responseData.resCode !== 0) {//返回的data.rescode不是0，就error了
             Message.error(response.message);
-            return Promise.reject(data);
+            return Promise.reject(responseData);
         }
         else {
             return response;

@@ -39,12 +39,10 @@ export default {
         };
     },
 
-    //创建完成时（生命周期）
     created() {
         this.getRouters();
     },
 
-    //挂载完成时（生命周期）
     mounted() {
     },
 
@@ -56,7 +54,7 @@ export default {
 
     methods:{
         /**
-         * 获取到 路由列表
+         * 获取路由列表
          */
         getRouters(){
             // this.$router.options 可以获取到 路由列表
