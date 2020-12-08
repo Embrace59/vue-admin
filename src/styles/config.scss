@@ -13,3 +13,12 @@ $mainColor: #f56c6c;
   -ms-#{$type}: $value;
   #{$type}: $value;
 }
+
+@mixin labelDom($align, $font-size, $line-height) {
+  label {
+    float: left;
+    text-align: $align;
+    font-size: $font-size + px;
+    line-height: $line-height + px;
+  }
+}

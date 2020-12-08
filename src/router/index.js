@@ -43,6 +43,14 @@ export default new VueRouter({
                         name: "首页"
                     },
                     component: () => import("../views/Console/index.vue"),
+                },
+                {
+                    path: "/info",
+                    name: "info",
+                    meta: {
+                        name: "信息"
+                    },
+                    component: () => import("../views/Info/index.vue"),
                 }
             ]
         },

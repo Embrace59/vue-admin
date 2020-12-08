@@ -1,7 +1,7 @@
 <template>
     <div id="main-wrap">
         <div class="main-content">
-            <div>{{aaa}}</div>
+           <router-view/>
         </div>
     </div>
 </template>
@@ -23,7 +23,6 @@ export default {
     mounted() {},
     //method
     methods:{
-
     },
     //props, watch => 子组件接收父组件参数
     props: {},
@@ -32,7 +31,6 @@ export default {
 </script>
 
 <style  lang="scss" scoped>
-
 #main-wrap{
     position: fixed;
     left: 200px;
@@ -50,19 +48,19 @@ export default {
         left: 200px;
     }
 }
-
 .close{
     #main-wrap{
         left: 64px;
     }
 }
-
 .main-content{
     width: 100%;
     height: 100%;
+    padding-top: $layoutHeader + 5px;
+    padding-left: 20px;
+    padding-right: 20px;
     @include webkit(box-sizing, border-box);
 }
-
 .content{
     width: 100%;
     height: 100%;
@@ -72,8 +70,4 @@ export default {
     @include webkit(box-sizing, border-box);
     background-color: #fff;
 }
-
 </style>
-
-
-

@@ -1,7 +1,7 @@
 <template>
     <div id="nav-wrap">
         <el-menu 
-            default-active="1-4-1" 
+            default-active="routeActive" 
             class="el-menu-vertical-demo"  
             :collapse="isCollapse" 
             background-color="transparent" 
@@ -47,8 +47,15 @@ export default {
     },
 
     computed:{
+        //折叠导航栏
         isCollapse(){
             return this.$store.state.app.isCollapse;
+        },
+        //监听被选中的路由
+        routeActive(){
+            const activeRoute = this.$route;
+            const { path } = activeRoute;
+            return path;
         }
     },
 

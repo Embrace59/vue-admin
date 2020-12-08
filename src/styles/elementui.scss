@@ -14,3 +14,51 @@
     }
   }
 }
+
+.label-wrap {
+  &.category {
+    .el-input--suffix .el-input__inner {
+      padding-right: 0px;
+    }
+  }
+  &.key-work {
+    .el-input--suffix .el-input__inner {
+      padding-right: 0px;
+    }
+    .el-input__inner {
+      width: 80px;
+    }
+  }
+  &.date {
+    .el-date-editor--datetimerange.el-input,
+    .el-date-editor--datetimerange.el-input__inner {
+      width: 330px;
+    }
+  }
+}
+
+.search {
+  .input_content {
+    width: 170px !important;
+  }
+}
+
+.search-button {
+  button.el-button--mini {
+    padding: 5px 15px !important;
+  }
+}
+
+div.el-table {
+  td,
+  th {
+    text-align: center;
+  }
+  th {
+    font-weight: bold;
+    color: #344a5f;
+  }
+  td {
+    font-size: 14px;
+  }
+}
