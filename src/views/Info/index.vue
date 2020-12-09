@@ -58,8 +58,9 @@
                     <el-button type="primary" plain size="mini" >搜索</el-button>
                 </div>
             </el-col>
+            <!-- 新增数据按钮 -->
             <el-col :span="2">
-                <el-button type="danger" size="mini" style="float: right">新增</el-button>
+                <el-button type="danger" size="mini" style="float: right" @click="dialogInfo = true">新增</el-button>
             </el-col>
         </el-row>
         <!-- 表格数据 -->
@@ -72,7 +73,7 @@
             <el-table-column prop="user" label="管理人"  width="100"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" plain size="mini">删除</el-button>
+                    <el-button type="primary" plain size="mini" @click="deleteItem">删除</el-button>
                     <el-button type="danger" plain size="mini">编辑</el-button>
                 </template>
             </el-table-column>
@@ -81,7 +82,7 @@
         <div class="black-space-30"></div>
         <el-row>
             <el-col :span="10">
-                <el-button type="danger" size="mini">批量删除</el-button>
+                <el-button type="danger" size="mini" @click="batchDeleteItem">批量删除</el-button>
             </el-col>
             <el-col :span="14">
                 <el-pagination
@@ -95,14 +96,20 @@
                 </el-pagination>
             </el-col>
         </el-row>
+        <!--新增弹窗-->
+        <infoDialog :flag.sync="dialogInfo" />
+        <!--修必弹窗-->
+        
     </div>
 </template>
 
 <script>
+import infoDialog from "./DialogComponents/InfoDialog.vue";
+
 export default {
     name: "infoIndex",
     
-    components: {},
+    components: { infoDialog },
     
     data() {
         return{
@@ -111,14 +118,6 @@ export default {
             {
                 value: '选项1',
                 label: '黄金糕'
-            }, 
-            {
-                value: '选项2',
-                label: '双皮奶'
-            }, 
-            {
-                value: '选项3',
-                label: '蚵仔煎'
             }],
 
             tableData: [
@@ -133,13 +132,9 @@ export default {
                 categoryId: '王小虎',
                 createDate: '上海市普陀区金沙江路 1518 弄',
                 user: 'aaa'
-            },
-            {
-                title: '2016-05-02',
-                categoryId: '王小虎',
-                createDate: '上海市普陀区金沙江路 1518 弄',
-                user: 'aaa'
             }],
+            //信息弹窗标记
+            dialogInfo: false,
             value: '',
             value2: '',
             search_keyWord: ''
@@ -154,8 +149,29 @@ export default {
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
         },
+
         handleCurrentChange(val) {
-          console.log(`当前页: ${val}`);
+            console.log(`当前页: ${val}`);
+        },
+        //删除单项
+        deleteItem(){
+            this.confirm({
+                content: "确认删除当前信息，确认后将无法恢复！！",
+                tip: "警告",
+                fn: this.confirmDelete
+            });
+        },
+        //批量删除
+        batchDeleteItem(){
+            this.confirm({
+                content: "确认删除选择的数据，确认后将无法恢复！",
+                tip: "警告",
+                fn: this.confirmDelete
+            });
+        },
+        //确认删除
+        confirmDelete(){
+            console.log("fuck")
         }
     },
     //props, watch => 子组件接收父组件参数

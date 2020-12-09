@@ -6,9 +6,12 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store/index.js";
 import premit from "./router/premit.js";
+//自定义全局方法
+import global from "./utils/global.js"
 //自定义全局组件
 import "./icons/index.js"
 
+Vue.use(global);
 Vue.use(ElementUI);
 Vue.use(VueCompositionApi);
 Vue.config.productionTip = false;
